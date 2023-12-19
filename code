@@ -1,0 +1,180 @@
+#Stark AI
+import speech_recognition as sr #Speech to text
+import pyttsx3 #engine for ai 
+import os #to open files
+import subprocess #to open files
+import sys #To control system and shutoff
+import random  #randomizer 
+from datetime import datetime #For times and dates
+
+#reconozizing class for speech
+recognizer= sr.Recognizer() 
+
+#Engine for ai 
+engine = pyttsx3.init()  
+
+# Note: Add Keyboard control later: pypnut
+
+def speak(text):
+    engine.say(text)
+    engine.runAndWait()
+#For stark to listen through mic
+def listen(): 
+    with sr. Microphone() as source:  #Stark is listening
+
+        recognizer.adjust_for_ambient_noise(source, duration=2)
+        
+        print("I am listening..")
+        try:
+            audio = recognizer.listen(source) # Stark capture the audio 
+            command = recognizer.recognize_google(audio) #
+           
+            return command
+            
+        except Exception as e: 
+            print("Sorry, I didn't catch that. Could you repeat that please? ")
+            speak("Sorry, I didn't catch that. Could you repeat that please? ")
+            return ""
+
+
+#Command processing function for Stark Ai
+def query(command):
+    if "open" in command: 
+        app = command.split("open", 1)[1].strip()  # get the app name
+        try:
+
+            if app == "File Explorer":
+                subprocess.Popen(["explorer"])
+                speak(f"Opening {app}")
+            elif app == "Firefox":
+                subprocess.Popen(["firefox"])
+                speak(f"Opening {app}") 
+            elif app == "Spotify": 
+                subprocess.Popen(["spotify"])
+                speak(f"Opening {app}") 
+           
+            elif app == "Notepad": 
+                subprocess.Popen(["notepad"])
+                speak(f"Opening {app}") 
+            elif "weather" in command: #Weather app has function 
+                 weather()
+            # Can add more apps here
+        except Exception as e: 
+            print(f"Sorry, I couldn't open {app}")
+            speak(f"Sorry, I couldn't open {app}") 
+    elif "close" in command:
+        app = command.split("close", 1)[1].strip()  
+        try:
+            if app == "Word":
+                os.system("taskkill /im winword.exe /f")
+                speak(f"Closing {app}")
+            elif app == "File Explorer":
+                os.system("taskkill /im explorer.exe /f")
+                speak(f"Closing {app}")
+            elif app == "Firefox":
+                os.system("taskkill /im firefox.exe /f")
+                speak(f"Closing {app}") 
+            elif app == "Spotify": 
+                os.system("taskkill /im spotify.exe /f")
+                speak(f"Closing {app}")
+            elif app == "Notepad": 
+                os.system("taskkill /im notepad.exe /f")
+                speak(f"Closing {app}")  
+            elif "weather" in command:
+                close_weather()
+                
+            # you can add more applications here...
+        except Exception as e:
+            print(f"Sorry, I couldn't close {app}")
+            speak(f"Sorry, I couldn't close {app}")
+   
+
+#Main Ai Program Function
+def main():
+    wait_for_greeting()
+    time_of_greeting()
+  
+    while True:
+        command = listen()
+        if "introduce yourself" in command.lower():
+            introduce() 
+        if "how are you" in command.lower():
+            how_are_you()
+       
+        if "standby" in command:
+            standby_mode()
+            continue
+        if "shut down" in command:
+           speak("Yes sir. Shutting down now.")
+           sys.exit()
+        
+        else:
+            query(command)
+            print("Anything else sir?")
+            speak("Anything else sir?")  
+
+#Knows Time of Day
+def time_of_greeting():
+#Can tell time 
+    current_hour = datetime.now().hour
+    if current_hour < 12:
+        greeting = "Good Morning"
+    elif 12 <= current_hour < 15:
+        greeting = "Good Afternoon"
+    else:
+        greeting = "Good Evening"
+#Options on text and greetings
+    opening_text = [f"{greeting}  How may I help?", f"{greeting} sir. How may I assist?", f"{greeting} sir. Need any assistance?"] 
+    text = random.choice(opening_text)
+    engine.say(text)
+    print(text)    
+#introduction function 
+def introduce():
+    print("Hello, My name is Stark at your service.")
+    speak("Hello, My name is Stark at your service")
+    print("I am a virtual ai assistant created and programmed by Duplain Rhodes.")
+    speak("I am a virtual ai assistant created and programmed by Duplain Rhodes.")
+    print("My purpose is to help assist Mr. Duplain with his daily tasks.")
+    speak("My purpose is to help assist Mr. Duplain with his daily tasks. ")
+    print("However please be advised: I am a demo build. My software is still a working progress.")
+    speak("However please be advised: I am a demo build.  My software is still a working progress.")
+    print("I am looking forward to help and assist anyway I can.")
+    speak("I am looking forward to help and assist anyway I can.")
+    return ""
+#Standby mode function 
+def standby_mode():
+    print("Yes sir, Entering standby mode. Let me know if you need anything.")
+    speak("Yes sir, Entering standby mode. Let me know if you need anything.")
+    while True: 
+        command = listen()
+        if "wake up" in command:
+            print ("Yes sir")
+            speak("Yes sir.")
+            break 
+#Say "Hello Stark" to start program
+def wait_for_greeting():
+    while True: 
+        command = listen()
+        if "hello" in command.lower():
+            print("Command Received")
+            speak("Command Received")
+            print("Welcome Back")
+            speak("Welcome Back.")
+            break
+#Say "How are you" function
+def how_are_you():
+    #Options on how are you
+    responses = [f"I am doing good sir, thank you!", f"I am doing well,thank you", f"I am very good ,thank you for asking sir."] 
+    text = random.choice(responses)
+    engine.say(text)
+    print(text)     
+
+#For weather app on microsoft/ open weather code
+def weather():
+   os.system('start explorer shell:AppsFolder\\Microsoft.BingWeather_8wekyb3d8bbwe!App')
+#and close weather code
+def close_weather():
+    os.system("taskkill/IM ApplicationFrameHost.exe /F") #Universal for windows apps
+#Starts the Program    
+if __name__ == "__main__":
+    main()
