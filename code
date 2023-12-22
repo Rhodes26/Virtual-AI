@@ -132,8 +132,8 @@ def time_of_greeting():
 def introduce():
     print("Hello, My name is Stark at your service.")
     speak("Hello, My name is Stark at your service")
-    print("I am a virtual ai assistant created and programmed by Duplain Rhodes.")
-    speak("I am a virtual ai assistant created and programmed by Duplain Rhodes.")
+    print("I am a virtual ai assistant created and programmed by Rhodes26.")
+    speak("I am a virtual ai assistant created and programmed by Rhodes26.")
     print("My purpose is to help assist you with his daily tasks.")
     speak("My purpose is to help assist you with his daily tasks. ")
     print("However please be advised: I am a demo build. My software is still a working progress.")
